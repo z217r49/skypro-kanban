@@ -7,11 +7,11 @@ const Main = () => {
 
                 <div className="main__block">
                     <div className="main__content">
-                        <Column />
-                        <Column />
-                        <Column />
-                        <Column />
-                        <Column />
+                        <Column columnStatus="БЕЗ СТАТУСА" />
+                        <Column columnStatus="НУЖНО СДЕЛАТЬ" />
+                        <Column columnStatus="В РАБОТЕ" />
+                        <Column columnStatus="ТЕСТИРОВАНИЕ" />
+                        <Column columnStatus="ГОТОВО" />
                     </div>
                 </div>
             </div>

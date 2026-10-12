@@ -1,10 +1,10 @@
 import Cards from "./Card";
 
-const Column = () => {
+const Column = ({columnStatus}) => {
     return (
         <div className="main__column">
             <div className="column__title">
-                <p>Нужно сделать</p>
+                <p>{columnStatus}</p>
             </div>
             <Cards />
         </div>
