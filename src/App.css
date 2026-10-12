@@ -915,9 +915,9 @@ body {
         margin: 0 auto;
         padding: 40px 0 64px;
     }
-    .main__content {
+    /* .main__content {
         display: block;
-    }
+    } */
     .main__column {
         width: 100%;
         margin: 0 auto;
