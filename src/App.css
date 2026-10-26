@@ -48,7 +48,8 @@ body {
     width: 100vw;
     min-height: 100vh;
     overflow: hidden;
-    background-color: #F1F1F1;
+    /* background-color: #F1F1F1; */
+    background-color: #EAEEF6;
 }
 
 .container {
@@ -777,7 +778,7 @@ body {
     padding: 0;
 }
 .header__pop-user-set {
-    display: none;
+    /* display: none; */
     position: absolute;
     top: 61px;
     right: 0;
