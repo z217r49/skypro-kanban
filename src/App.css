@@ -783,7 +783,7 @@ body {
     padding: 0;
 }
 .header__pop-user-set {
-    /* display: none; */
+    display: none;
     position: absolute;
     top: 61px;
     right: -1px;
