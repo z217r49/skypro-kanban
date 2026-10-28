@@ -1,12 +1,16 @@
-import Cards from "./Card";
+import Card from "./Card";
 
-const Column = ({columnStatus}) => {
+const Column = ({ columnStatus, cards }) => {
     return (
         <div className="main__column">
             <div className="column__title">
                 <p>{columnStatus}</p>
             </div>
-            <Cards />
+            <div className="cards">
+                {cards.map((card) => (
+                    <Card key={card.id} card={card} />
+                ))}
+            </div>
         </div>
     );
 };

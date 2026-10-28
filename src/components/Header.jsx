@@ -7,7 +7,7 @@ const Header = () => {
     const userMenuRef = useRef(null);
 
     const toggleUserMenu = (event) => {
-        event.preventDefault(); // убираем переход по #user-set-target
+        event.preventDefault();
         setIsUserMenuOpen((isOpen) => !isOpen);
     };
 
