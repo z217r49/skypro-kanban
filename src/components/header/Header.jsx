@@ -1,5 +1,13 @@
 import { useEffect, useRef, useState } from "react";
-import PopUser from "./popups/PopUser";
+import PopUser from "../popups/PopUser";
+import {
+    SHeader,
+    SHeaderBlock,
+    SHeaderNav,
+    SHeaderBtnMainNew,
+    SHeaderBtnMainNewA,
+    SHeaderUser,
+} from "./Header.styled";
 
 const Header = () => {
     const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
@@ -36,9 +44,9 @@ const Header = () => {
     }, [isUserMenuOpen]);
 
     return (
-        <header className="header">
+        <SHeader>
             <div className="container">
-                <div className="header__block">
+                <SHeaderBlock>
                     <div className="header__logo _show _light">
                         <a href="" target="_self">
                             <img src="../../public/images/logo.png" alt="logo" />
@@ -50,31 +58,30 @@ const Header = () => {
                         </a>
                     </div>
 
-                    <nav className="header__nav">
-                        <button className="header__btn-main-new _hover01" id="btnMainNew">
-                            <a href="#popNewCard">Создать новую задачу</a>
-                        </button>
+                    <SHeaderNav>
+                        <SHeaderBtnMainNew id="btnMainNew">
+                            <SHeaderBtnMainNewA href="#popNewCard">Создать новую задачу</SHeaderBtnMainNewA>
+                        </SHeaderBtnMainNew>
 
                         <div
                             ref={userMenuRef}
                             style={{ display: "contents" }}
                         >
-                            <a
+                            <SHeaderUser
                                 href="#user-set-target"
-                                className="header__user _hover02"
                                 onClick={toggleUserMenu}
                             >
                                 Ivan Ivanov
-                            </a>
+                            </SHeaderUser>
 
                             {isUserMenuOpen && (
                                 <PopUser onClose={() => setIsUserMenuOpen(false)} />
                             )}
                         </div>
-                    </nav>
-                </div>
+                    </SHeaderNav>
+                </SHeaderBlock>
             </div>
-        </header>
+        </SHeader>
     );
 };
 
