@@ -1,4 +1,4 @@
-import Calendar from "../Calendar";
+import Calendar from "../calendar/Calendar";
 
 const PopBrowse = () => {
     return (
