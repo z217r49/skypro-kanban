@@ -14,7 +14,7 @@ export const SWrapper = styled.div`
     `}
 `;
 
-export const SContainerSignup = styled.div`
+export const SContainerSignin = styled.div`
     display: block;
     width: 100vw;
     min-height: 100vh;
@@ -32,7 +32,7 @@ export const SModal = styled.div`
     justify-content: center;
 
     @media screen and (max-width: 375px) {
-    background-color: #ffffff;
+        background-color: #ffffff;
     }
 `;
 
@@ -48,29 +48,30 @@ export const SModalBlock = styled.div`
     box-shadow: 0px 4px 67px -12px rgba(0, 0, 0, 0.13);
 
     ${({ $dark }) =>
-    $dark &&`
-        background-color: #20202c;
-        border: 0.7px solid #4e5566;
-    `}
+        $dark &&
+        `
+            background-color: #20202c;
+            border: 0.7px solid #4e5566;
+        `}
 
     @media screen and (max-width: 375px) {
-    max-width: 368px;
-    width: 100%;
-    padding: 0 16px;
-    border-radius: none;
-    border: none;
-    box-shadow: none;
+        max-width: 368px;
+        width: 100%;
+        padding: 0 16px;
+        border-radius: none;
+        border: none;
+        box-shadow: none;
     }
 `;
 
 export const SModalTtl = styled.div`
     h2 {
-    text-align: center;
-    font-size: 20px;
-    font-weight: 700;
-    line-height: 30px;
-    letter-spacing: -0.6px;
-    margin-bottom: 20px;
+        text-align: center;
+        font-size: 20px;
+        font-weight: 700;
+        line-height: 30px;
+        letter-spacing: -0.6px;
+        margin-bottom: 20px;
     }
 `;
 
@@ -81,8 +82,8 @@ export const SModalFormLogin = styled.form`
     align-items: center;
     justify-content: center;
 
-    input:not(:last-child) {
-    margin-bottom: 7px;
+    input:first-child {
+        margin-bottom: 7px;
     }
 `;
 
@@ -95,31 +96,31 @@ export const SModalInput = styled.input`
     padding: 10px 8px;
 
     &::placeholder {
-    font-family: "Roboto", sans-serif;
-    font-weight: 400;
-    font-size: 14px;
-    line-height: 21px;
-    letter-spacing: -0.28px;
-    color: #94a6be;
+        font-family: "Roboto", sans-serif;
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 21px;
+        letter-spacing: -0.28px;
+        color: #94a6be;
     }
 
     &::-moz-placeholder {
-    font-family: "Roboto", sans-serif;
-    font-weight: 400;
-    font-size: 14px;
-    line-height: 21px;
-    letter-spacing: -0.28px;
-    color: #94a6be;
+        font-family: "Roboto", sans-serif;
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 21px;
+        letter-spacing: -0.28px;
+        color: #94a6be;
     }
 
     ${({ $dark }) =>
-    $dark &&
-    `
-        background-color: transparent;
-    `}
+        $dark &&
+        `
+            background-color: transparent;
+        `}
 `;
 
-export const SModalBtnSignupEnt = styled.button`
+export const SModalBtnEnter = styled.button`
     width: 100%;
     height: 30px;
     background-color: #565eef;
@@ -138,20 +139,20 @@ export const SModalBtnSignupEnt = styled.button`
     color: #ffffff;
 
     a {
-    width: 100%;
-    height: 100%;
-    color: #ffffff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+        width: 100%;
+        height: 100%;
+        color: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     &:hover {
-    background-color: #33399b;
+        background-color: #33399b;
     }
 
     @media screen and (max-width: 375px) {
-    height: 40px;
+        height: 40px;
     }
 `;
 
@@ -160,14 +161,14 @@ export const SModalFormGroup = styled.div`
 
     p,
     a {
-    color: rgba(148, 166, 190, 0.4);
-    font-size: 14px;
-    font-weight: 400;
-    line-height: 150%;
-    letter-spacing: -0.14px;
+        color: rgba(148, 166, 190, 0.4);
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 150%;
+        letter-spacing: -0.14px;
     }
 
     a {
-    text-decoration: underline;
+        text-decoration: underline;
     }
 `;

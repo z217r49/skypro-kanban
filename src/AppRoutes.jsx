@@ -1,36 +1,51 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { useEffect, useState } from 'react';
-import PageBoardCards from './pages/PageBoardCards';
-import PageNewTask from './pages/PageNewTask';
-import PageUser from './pages/PageUser';
-import PageOutAccount from './pages/PageOutAccount';
-import Page404 from './pages/Page404';
-import PageRegistration from './pages/PageRegistration';
-import PageViewingEditingCard from './pages/PageViewingEditingCard';
+import { Route, Routes } from "react-router-dom";
+import ProtectedRoute from "./components/protectedRoute/ProtectedRoute";
+import PageMain from "./pages/PageMain";
+import PageBrowse from "./pages/PageBrowse";
+import PageNewCard from "./pages/PageNewCard";
+import PageExit from "./pages/PageExit";
+import PageLogin from "./pages/PageLogin";
+import PageRegistration from "./pages/PageRegistration";
+import Page404 from "./pages/Page404";
 
-function AppRoutes () {
-    const [loading, setLoading] = useState(true);
-
-    useEffect (() => {
-        setTimeout(() => {
-            setLoading(false);
-        }, 3000);
-    }, []);
-
+const AppRoutes = () => {
     return (
-        <Router>
-            <Routes>
-                <Route path='/' element={<PageBoardCards loading={loading} />} />
+        <Routes>
+            {/* Доска: шапка + колонки, вложенные маршруты рисуются поверх доски */}
+            <Route path="/" element={<PageMain />}>
+                <Route index element={null} />
 
-                <Route path='/page-user' element={<PageUser />} />
-                
-                <Route path='/page-new-task' element={<PageNewTask />} />
+                {/* Просмотр карточки: id берётся из адреса */}
+                <Route
+                    path="card/:id"
+                    element={
+                        <ProtectedRoute>
+                            <PageBrowse />
+                        </ProtectedRoute>
+                    }
+                />
 
-                <Route path='/PageOutAccount' element={<PageOutAccount />} />
+                {/* Добавление задачи */}
+                <Route
+                    path="new-card"
+                    element={
+                        <ProtectedRoute>
+                            <PageNewCard />
+                        </ProtectedRoute>
+                    }
+                />
 
+                {/* Выход из аккаунта */}
+                <Route path="exit" element={<PageExit />} />
+            </Route>
 
-            </Routes>
-        </Router>
-    )
+            <Route path="/login" element={<PageLogin />} />
+            <Route path="/register" element={<PageRegistration />} />
 
-}
+            {/* 404 */}
+            <Route path="*" element={<Page404 />} />
+        </Routes>
+    );
+};
+
+export default AppRoutes;

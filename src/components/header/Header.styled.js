@@ -41,6 +41,8 @@ export const SHeaderBtnMainNew = styled.button`
     line-height: 1;
     font-weight: 500;
     margin-right: 20px;
+    align-content: center;
+    text-align: center;
 
     &:hover {
         background-color: #33399b;

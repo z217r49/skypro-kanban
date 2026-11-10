@@ -1,15 +1,18 @@
 import { useEffect, useRef, useState } from "react";
-import PopUser from "../popups/PopUser";
+import { Link } from "react-router-dom";
+import PopUser from "../popups/popUser/PopUser";
+import { useAuth } from "../../context/AuthContext";
 import {
     SHeader,
     SHeaderBlock,
+    SHeaderLogoImg,
     SHeaderNav,
     SHeaderBtnMainNew,
-    SHeaderBtnMainNewA,
     SHeaderUser,
 } from "./Header.styled";
 
 const Header = () => {
+    const { user, isAuth } = useAuth();
     const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
 
     const userMenuRef = useRef(null);
@@ -48,36 +51,36 @@ const Header = () => {
             <div className="container">
                 <SHeaderBlock>
                     <div className="header__logo _show _light">
-                        <a href="" target="_self">
-                            <img src="../../public/images/logo.png" alt="logo" />
-                        </a>
+                        <Link to="/">
+                            <SHeaderLogoImg src="/images/logo.png" alt="logo" />
+                        </Link>
                     </div>
                     <div className="header__logo _dark">
-                        <a href="" target="_self">
-                            <img src="../../public/images/logo_dark.png" alt="logo" />
-                        </a>
+                        <Link to="/">
+                            <SHeaderLogoImg src="/images/logo_dark.png" alt="logo" />
+                        </Link>
                     </div>
 
                     <SHeaderNav>
-                        <SHeaderBtnMainNew id="btnMainNew">
-                            <SHeaderBtnMainNewA href="#popNewCard">Создать новую задачу</SHeaderBtnMainNewA>
+                        <SHeaderBtnMainNew as={Link} to="/new-card">
+                            Создать новую задачу
                         </SHeaderBtnMainNew>
 
-                        <div
-                            ref={userMenuRef}
-                            style={{ display: "contents" }}
-                        >
-                            <SHeaderUser
-                                href="#user-set-target"
-                                onClick={toggleUserMenu}
-                            >
-                                Ivan Ivanov
-                            </SHeaderUser>
+                        {isAuth ? (
+                            <div ref={userMenuRef} style={{ display: "contents" }}>
+                                <SHeaderUser onClick={toggleUserMenu}>
+                                    {user?.name ?? "Пользователь"}
+                                </SHeaderUser>
 
-                            {isUserMenuOpen && (
-                                <PopUser onClose={() => setIsUserMenuOpen(false)} />
-                            )}
-                        </div>
+                                {isUserMenuOpen && (
+                                    <PopUser onClose={() => setIsUserMenuOpen(false)} />
+                                )}
+                            </div>
+                        ) : (
+                            <SHeaderUser as={Link} to="/login">
+                                Войти
+                            </SHeaderUser>
+                        )}
                     </SHeaderNav>
                 </SHeaderBlock>
             </div>
