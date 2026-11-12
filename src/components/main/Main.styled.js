@@ -32,3 +32,36 @@ export const SLoading = styled.p`
     color: #94a6be;
     letter-spacing: 0.02em;
 `;
+
+export const SError = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    width: 100%;
+    min-height: 300px;
+    padding: 0 16px;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1.4;
+    color: #e52e2e;
+    letter-spacing: 0.02em;
+    text-align: center;
+`;
+
+export const SRetry = styled.button`
+    height: 30px;
+    padding: 0 20px;
+    border: none;
+    border-radius: 4px;
+    background-color: #565eef;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1;
+
+    &:hover {
+        background-color: #33399b;
+    }
+`;

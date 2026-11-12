@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../../context/AuthContext";
+import Message from "../../ui/Message";
 import {
     SWrapper,
     SContainerSignup,
@@ -14,26 +15,80 @@ import {
 } from "./PopRegistration.styled";
 
 const PopRegistration = ({ dark = false }) => {
-    const { login } = useAuth();
+    const { register } = useAuth();
     const navigate = useNavigate();
 
-    const [name, setName] = useState("");
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+    const [form, setForm] = useState({ name: "", login: "", password: "" });
+    const [fieldErrors, setFieldErrors] = useState({});
+    const [apiError, setApiError] = useState("");
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const handleSubmit = (event) => {
+    const hasError = Boolean(apiError) || Object.keys(fieldErrors).length > 0;
+    const isDisabled = isSubmitting || hasError;
+
+    const handleChange = (event) => {
+        const { name, value } = event.target;
+
+        setForm((prev) => ({ ...prev, [name]: value }));
+
+        setFieldErrors((prev) => {
+            if (!prev[name]) {
+                return prev;
+            }
+
+            const next = { ...prev };
+            delete next[name];
+            return next;
+        });
+
+        setApiError("");
+    };
+
+    const validate = () => {
+        const nextErrors = {};
+
+        if (!form.name.trim()) {
+            nextErrors.name = "Введите имя";
+        }
+
+        if (!form.login.trim()) {
+            nextErrors.login = "Введите логин";
+        }
+
+        if (!form.password.trim()) {
+            nextErrors.password = "Введите пароль";
+        }
+
+        return nextErrors;
+    };
+
+    const handleSubmit = async (event) => {
         event.preventDefault();
 
-        if (!name.trim() || !email.trim() || !password.trim()) {
+        const nextErrors = validate();
+        setFieldErrors(nextErrors);
+
+        if (Object.keys(nextErrors).length > 0) {
+            setApiError("");
             return;
         }
 
-        login({
-            name: name.trim(),
-            email: email.trim(),
-        });
+        setIsSubmitting(true);
+        setApiError("");
 
-        navigate("/", { replace: true });
+        try {
+            await register({
+                name: form.name.trim(),
+                login: form.login.trim(),
+                password: form.password,
+            });
+
+            navigate("/", { replace: true });
+        } catch (error) {
+            setApiError(error.message);
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     return (
@@ -44,29 +99,35 @@ const PopRegistration = ({ dark = false }) => {
                         <SModalTtl>
                             <h2>Регистрация</h2>
                         </SModalTtl>
-                        <SModalFormLogin id="formLogUp" onSubmit={handleSubmit}>
+                        <SModalFormLogin id="formLogUp" onSubmit={handleSubmit} noValidate>
                             <SModalInput
                                 $dark={dark}
                                 className="first-name"
                                 type="text"
-                                name="first-name"
+                                name="name"
                                 id="first-name"
                                 placeholder="Имя"
-                                required
-                                value={name}
-                                onChange={(event) => setName(event.target.value)}
+                                autoComplete="name"
+                                aria-invalid={Boolean(fieldErrors.name) || Boolean(apiError)}
+                                value={form.name}
+                                onChange={handleChange}
                             />
+                            <Message>{fieldErrors.name}</Message>
+
                             <SModalInput
                                 $dark={dark}
                                 className="login"
-                                type="email"
+                                type="text"
                                 name="login"
                                 id="loginReg"
-                                placeholder="Эл. почта"
-                                required
-                                value={email}
-                                onChange={(event) => setEmail(event.target.value)}
+                                placeholder="Логин"
+                                autoComplete="username"
+                                aria-invalid={Boolean(fieldErrors.login) || Boolean(apiError)}
+                                value={form.login}
+                                onChange={handleChange}
                             />
+                            <Message>{fieldErrors.login}</Message>
+
                             <SModalInput
                                 $dark={dark}
                                 className="password-first"
@@ -74,13 +135,23 @@ const PopRegistration = ({ dark = false }) => {
                                 name="password"
                                 id="passwordFirst"
                                 placeholder="Пароль"
-                                required
-                                value={password}
-                                onChange={(event) => setPassword(event.target.value)}
+                                autoComplete="new-password"
+                                aria-invalid={Boolean(fieldErrors.password) || Boolean(apiError)}
+                                value={form.password}
+                                onChange={handleChange}
                             />
-                            <SModalBtnSignupEnt type="submit" id="SignUpEnter">
-                                Зарегистрироваться
+                            <Message>{fieldErrors.password}</Message>
+
+                            <Message>{apiError}</Message>
+
+                            <SModalBtnSignupEnt
+                                type="submit"
+                                id="SignUpEnter"
+                                disabled={isDisabled}
+                            >
+                                {isSubmitting ? "Регистрация..." : "Зарегистрироваться"}
                             </SModalBtnSignupEnt>
+
                             <SModalFormGroup>
                                 <p>
                                     Уже есть аккаунт? <Link to="/login">Войдите здесь</Link>

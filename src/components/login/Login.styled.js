@@ -113,6 +113,10 @@ export const SModalInput = styled.input`
         color: #94a6be;
     }
 
+    &[aria-invalid="true"] {
+        border-color: #e52e2e;
+    }
+
     ${({ $dark }) =>
         $dark &&
         `
@@ -149,6 +153,11 @@ export const SModalBtnEnter = styled.button`
 
     &:hover {
         background-color: #33399b;
+    }
+
+    &:disabled {
+        background-color: #94a6be;
+        cursor: not-allowed;
     }
 
     @media screen and (max-width: 375px) {
