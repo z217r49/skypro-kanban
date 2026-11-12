@@ -1,7 +1,16 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import Column from "../column/Column";
-import { cardList } from "../../data";
-import { SMain, SMainBlock, SMainContent, SLoading } from "./Main.styled";
+import { getTasks } from "../../services/tasks";
+import { normalizeTask } from "../../utils/task";
+import {
+    SMain,
+    SMainBlock,
+    SMainContent,
+    SLoading,
+    SError,
+    SRetry,
+} from "./Main.styled";
 
 const COLUMNS = [
     { title: "БЕЗ СТАТУСА", status: "Без статуса" },
@@ -12,15 +21,34 @@ const COLUMNS = [
 ];
 
 const Main = () => {
+    const location = useLocation();
+
+    const [tasks, setTasks] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState("");
+
+    const loadTasks = useCallback(async () => {
+        setIsLoading(true);
+        setError("");
+
+        try {
+            const data = await getTasks();
+            setTasks(data.map(normalizeTask));
+        } catch (err) {
+            setTasks([]);
+            setError(err.message);
+        } finally {
+            setIsLoading(false);
+        }
+    }, []);
 
     useEffect(() => {
-        const timer = setTimeout(() => {
-            setIsLoading(false);
-        }, 1500);
+        if (location.pathname !== "/") {
+            return;
+        }
 
-        return () => clearTimeout(timer);
-    }, []);
+        loadTasks();
+    }, [location.pathname, loadTasks]);
 
     return (
         <SMain>
@@ -28,13 +56,20 @@ const Main = () => {
                 <SMainBlock>
                     {isLoading ? (
                         <SLoading>Данные загружаются</SLoading>
+                    ) : error ? (
+                        <SError>
+                            <span>{error}</span>
+                            <SRetry type="button" onClick={loadTasks}>
+                                Повторить
+                            </SRetry>
+                        </SError>
                     ) : (
                         <SMainContent>
                             {COLUMNS.map(({ title, status }) => (
                                 <Column
                                     key={status}
                                     columnStatus={title}
-                                    cards={cardList.filter((card) => card.status === status)}
+                                    cards={tasks.filter((task) => task.status === status)}
                                 />
                             ))}
                         </SMainContent>

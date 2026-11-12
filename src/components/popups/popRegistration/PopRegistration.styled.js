@@ -88,72 +88,81 @@ export const SModalFormLogin = styled.form`
 `;
 
 export const SModalInput = styled.input`
-  width: 100%;
-  min-width: 100%;
-  border-radius: 8px;
-  border: 0.7px solid rgba(148, 166, 190, 0.4);
-  outline: none;
-  padding: 10px 8px;
+    width: 100%;
+    min-width: 100%;
+    border-radius: 8px;
+    border: 0.7px solid rgba(148, 166, 190, 0.4);
+    outline: none;
+    padding: 10px 8px;
 
-  &::placeholder {
-    font-family: "Roboto", sans-serif;
-    font-weight: 400;
-    font-size: 14px;
-    line-height: 21px;
-    letter-spacing: -0.28px;
-    color: #94a6be;
-  }
+    &::placeholder {
+        font-family: "Roboto", sans-serif;
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 21px;
+        letter-spacing: -0.28px;
+        color: #94a6be;
+    }
 
-  &::-moz-placeholder {
-    font-family: "Roboto", sans-serif;
-    font-weight: 400;
-    font-size: 14px;
-    line-height: 21px;
-    letter-spacing: -0.28px;
-    color: #94a6be;
-  }
+    &::-moz-placeholder {
+        font-family: "Roboto", sans-serif;
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 21px;
+        letter-spacing: -0.28px;
+        color: #94a6be;
+    }
 
-  ${({ $dark }) =>
+    &[aria-invalid="true"] {
+        border-color: #e52e2e;
+    }
+
+    ${({ $dark }) =>
         $dark &&
         `
-      background-color: transparent;
-    `}
+            background-color: transparent;
+        `}
 `;
 
 export const SModalBtnSignupEnt = styled.button`
-  width: 100%;
-  height: 30px;
-  background-color: #565eef;
-  border-radius: 4px;
-  margin-top: 20px;
-  margin-bottom: 20px;
-  border: none;
-  outline: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
-  line-height: 21px;
-  font-weight: 500;
-  letter-spacing: -0.14px;
-  color: #ffffff;
-
-  a {
     width: 100%;
-    height: 100%;
-    color: #ffffff;
+    height: 30px;
+    background-color: #565eef;
+    border-radius: 4px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    border: none;
+    outline: none;
     display: flex;
     align-items: center;
     justify-content: center;
-  }
+    font-size: 14px;
+    line-height: 21px;
+    font-weight: 500;
+    letter-spacing: -0.14px;
+    color: #ffffff;
 
-  &:hover {
-    background-color: #33399b;
-  }
+    a {
+        width: 100%;
+        height: 100%;
+        color: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 
-  @media screen and (max-width: 375px) {
-    height: 40px;
-  }
+    &:hover {
+        background-color: #33399b;
+    }
+
+    &:disabled {
+        background-color: #94a6be;
+        cursor: not-allowed;
+    }
+
+    @media screen and (max-width: 375px) {
+        height: 40px;
+    }
 `;
 
 export const SModalFormGroup = styled.div`

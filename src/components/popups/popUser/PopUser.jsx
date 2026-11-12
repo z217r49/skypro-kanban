@@ -13,8 +13,8 @@ const PopUser = ({ onClose }) => {
 
     return (
         <SHeaderPopUserSet id="user-set-target">
-            <SPopUserSetName>{user?.name ?? "Ivan Ivanov"}</SPopUserSetName>
-            <SPopUserSetMail>{user?.email ?? "ivan.ivanov@gmail.com"}</SPopUserSetMail>
+            <SPopUserSetName>{user?.name ?? "Пользователь"}</SPopUserSetName>
+            <SPopUserSetMail>{user?.login ?? ""}</SPopUserSetMail>
 
             <SPopUserSetTheme>
                 <p>Темная тема</p>
