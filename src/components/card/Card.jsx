@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import {
     SCardItem,
     SCardsCard,
@@ -19,8 +20,9 @@ const TOPIC_COLOR = {
 };
 
 const Card = ({ card }) => {
-    const { topic, title, date } = card;
+    const { id, topic, title, date } = card;
     const topicColor = TOPIC_COLOR[topic] ?? "_gray";
+    const cardUrl = `/card/${id}`;
 
     return (
         <SCardItem>
@@ -29,18 +31,18 @@ const Card = ({ card }) => {
                     <SCardTheme $color={topicColor}>
                         <SCardThemeText>{topic}</SCardThemeText>
                     </SCardTheme>
-                    <a href="#popBrowse" target="_self">
+                    <Link to={cardUrl}>
                         <SCardBtn>
                             <SCardBtnDot />
                             <SCardBtnDot />
                             <SCardBtnDot />
                         </SCardBtn>
-                    </a>
+                    </Link>
                 </SCardGroup>
                 <SCardContent>
-                    <a href="" target="_blank">
+                    <Link to={cardUrl}>
                         <SCardTitle>{title}</SCardTitle>
-                    </a>
+                    </Link>
                     <SCardDate>
                         <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 13 13" fill="none">
                             <g clipPath="url(#clip0_1_415)">

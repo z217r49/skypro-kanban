@@ -1,6 +1,5 @@
 import styled from "styled-components";
 
-// .main
 export const SMain = styled.main`
     width: 100%;
     background-color: #eaeef6;
