@@ -24,9 +24,13 @@ const PopRegistration = ({ dark = false }) => {
     const handleSubmit = (event) => {
         event.preventDefault();
 
+        if (!name.trim() || !email.trim() || !password.trim()) {
+            return;
+        }
+
         login({
-            name: name.trim() || "Ivan Ivanov",
-            email: email.trim() || "ivan.ivanov@gmail.com",
+            name: name.trim(),
+            email: email.trim(),
         });
 
         navigate("/", { replace: true });
@@ -48,6 +52,7 @@ const PopRegistration = ({ dark = false }) => {
                                 name="first-name"
                                 id="first-name"
                                 placeholder="Имя"
+                                required
                                 value={name}
                                 onChange={(event) => setName(event.target.value)}
                             />
@@ -58,6 +63,7 @@ const PopRegistration = ({ dark = false }) => {
                                 name="login"
                                 id="loginReg"
                                 placeholder="Эл. почта"
+                                required
                                 value={email}
                                 onChange={(event) => setEmail(event.target.value)}
                             />
@@ -68,6 +74,7 @@ const PopRegistration = ({ dark = false }) => {
                                 name="password"
                                 id="passwordFirst"
                                 placeholder="Пароль"
+                                required
                                 value={password}
                                 onChange={(event) => setPassword(event.target.value)}
                             />
