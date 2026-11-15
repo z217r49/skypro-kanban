@@ -24,13 +24,17 @@ const PopLogin = ({ dark = false }) => {
     const handleSubmit = (event) => {
         event.preventDefault();
 
+        if (!email.trim() || !password.trim()) {
+            return;
+        }
+
         login({
             name: "Ivan Ivanov",
-            email: email.trim() || "ivan.ivanov@gmail.com",
+            email: email.trim(),
         });
 
-        const from = location.state?.from?.pathname ?? "/";
-        navigate(from, { replace: true });
+        const from = location.state?.from?.pathname;
+        navigate(from && from !== "/exit" ? from : "/", { replace: true });
     };
 
     return (
@@ -48,6 +52,7 @@ const PopLogin = ({ dark = false }) => {
                                 name="login"
                                 id="formlogin"
                                 placeholder="Эл. почта"
+                                required
                                 value={email}
                                 onChange={(event) => setEmail(event.target.value)}
                             />
@@ -57,6 +62,7 @@ const PopLogin = ({ dark = false }) => {
                                 name="password"
                                 id="formpassword"
                                 placeholder="Пароль"
+                                required
                                 value={password}
                                 onChange={(event) => setPassword(event.target.value)}
                             />
