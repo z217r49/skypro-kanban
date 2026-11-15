@@ -1,5 +1,8 @@
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import Calendar from "../../calendar/Calendar";
+import Message from "../../ui/Message";
+import { deleteTask } from "../../../services/tasks";
 import {
     SPopBrowse,
     SPopBrowseContainer,
@@ -40,10 +43,33 @@ const STATUSES = [
     "Готово",
 ];
 
-const PopBrowse = ({ card, cardId }) => {
+const PopBrowse = ({ card, cardId, isLoading = false, error = "" }) => {
+    const navigate = useNavigate();
+
+    const [isDeleting, setIsDeleting] = useState(false);
+    const [actionError, setActionError] = useState("");
+
     const topic = card?.topic ?? "Web Design";
     const topicColor = TOPIC_COLOR[topic] ?? "gray";
     const id = card?.id ?? cardId;
+
+    const handleDelete = async () => {
+        if (!card?.id) {
+            return;
+        }
+
+        setIsDeleting(true);
+        setActionError("");
+
+        try {
+            await deleteTask(card.id);
+            navigate("/", { replace: true });
+        } catch (err) {
+            setActionError(err.message);
+        } finally {
+            setIsDeleting(false);
+        }
+    };
 
     return (
         <SPopBrowse id="popBrowse">
@@ -57,8 +83,11 @@ const PopBrowse = ({ card, cardId }) => {
                             </SThemeTop>
                         </SPopBrowseTopBlock>
 
-                        {/* id, полученный из адреса страницы */}
                         <SStatusP>ID задачи: {id}</SStatusP>
+
+                        {isLoading && <SStatusP>Загрузка задачи...</SStatusP>}
+                        <Message>{error}</Message>
+                        <Message>{actionError}</Message>
 
                         <SPopBrowseStatus>
                             <SStatusP>Статус</SStatusP>
@@ -75,7 +104,7 @@ const PopBrowse = ({ card, cardId }) => {
                         </SPopBrowseStatus>
 
                         <SPopBrowseWrap>
-                            <SPopBrowseForm id="formBrowseCard" action="#">
+                            <SPopBrowseForm id="formBrowseCard">
                                 <SFormBrowseBlock>
                                     <SSubttl htmlFor="textArea01">Описание задачи</SSubttl>
                                     <SFormBrowseArea
@@ -100,11 +129,13 @@ const PopBrowse = ({ card, cardId }) => {
 
                         <SPopBrowseBtnBrowse>
                             <SBtnGroup>
-                                <SBtnBor>
-                                    <a href="#">Редактировать задачу</a>
-                                </SBtnBor>
-                                <SBtnBor>
-                                    <a href="#">Удалить задачу</a>
+                                <SBtnBor type="button">Редактировать задачу</SBtnBor>
+                                <SBtnBor
+                                    type="button"
+                                    onClick={handleDelete}
+                                    disabled={isDeleting || !card?.id}
+                                >
+                                    {isDeleting ? "Удаление..." : "Удалить задачу"}
                                 </SBtnBor>
                             </SBtnGroup>
                             <SBtnBg>
@@ -117,15 +148,13 @@ const PopBrowse = ({ card, cardId }) => {
                                 <SBtnBg>
                                     <Link to="/">Закрыть</Link>
                                 </SBtnBg>
-                                <SBtnBor>
-                                    <a href="#">Отменить</a>
-                                </SBtnBor>
-                                <SBtnBor id="btnDelete">
-                                    <a href="#">Удалить задачу</a>
+                                <SBtnBor type="button">Отменить</SBtnBor>
+                                <SBtnBor type="button" id="btnDelete">
+                                    Удалить задачу
                                 </SBtnBor>
                             </SBtnGroup>
                             <SBtnBg>
-                                <a href="#">Закрыть</a>
+                                <Link to="/">Закрыть</Link>
                             </SBtnBg>
                         </SPopBrowseBtnEdit>
                     </SPopBrowseContent>
