@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Calendar from "../../calendar/Calendar";
 import Message from "../../ui/Message";
-import { deleteTask } from "../../../services/tasks";
+import { useTasks } from "../../../context/TaskContext";
 import {
     SPopBrowse,
     SPopBrowseContainer,
@@ -23,7 +23,6 @@ import {
     SSubttl,
     SFormBrowseArea,
     SPopBrowseBtnBrowse,
-    SPopBrowseBtnEdit,
     SBtnGroup,
     SBtnBor,
     SBtnBg,
@@ -45,6 +44,7 @@ const STATUSES = [
 
 const PopBrowse = ({ card, cardId, isLoading = false, error = "" }) => {
     const navigate = useNavigate();
+    const { removeTask } = useTasks();
 
     const [isDeleting, setIsDeleting] = useState(false);
     const [actionError, setActionError] = useState("");
@@ -62,7 +62,7 @@ const PopBrowse = ({ card, cardId, isLoading = false, error = "" }) => {
         setActionError("");
 
         try {
-            await deleteTask(card.id);
+            await removeTask(card.id);
             navigate("/", { replace: true });
         } catch (err) {
             setActionError(err.message);
@@ -142,21 +142,6 @@ const PopBrowse = ({ card, cardId, isLoading = false, error = "" }) => {
                                 <Link to="/">Закрыть</Link>
                             </SBtnBg>
                         </SPopBrowseBtnBrowse>
-
-                        <SPopBrowseBtnEdit $hide>
-                            <SBtnGroup>
-                                <SBtnBg>
-                                    <Link to="/">Закрыть</Link>
-                                </SBtnBg>
-                                <SBtnBor type="button">Отменить</SBtnBor>
-                                <SBtnBor type="button" id="btnDelete">
-                                    Удалить задачу
-                                </SBtnBor>
-                            </SBtnGroup>
-                            <SBtnBg>
-                                <Link to="/">Закрыть</Link>
-                            </SBtnBg>
-                        </SPopBrowseBtnEdit>
                     </SPopBrowseContent>
                 </SPopBrowseBlock>
             </SPopBrowseContainer>

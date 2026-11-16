@@ -1,54 +1,30 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import PopBrowse from "../components/popups/popBrowse/PopBrowse";
-import { getTaskById } from "../services/tasks";
-import { normalizeTask } from "../utils/task";
+import { useTasks } from "../context/TaskContext";
 
 const PageBrowse = () => {
     const { id } = useParams();
+    const { tasks, isLoading, error, fetchTasks } = useTasks();
 
-    const [task, setTask] = useState(null);
-    const [isLoading, setIsLoading] = useState(true);
-    const [error, setError] = useState("");
+    const card = tasks.find((task) => task.id === id) ?? null;
 
     useEffect(() => {
-        let isCancelled = false;
+        if (tasks.length > 0) {
+            return;
+        }
 
-        const loadTask = async () => {
-            setIsLoading(true);
-            setError("");
+        fetchTasks();
+    }, [tasks.length, fetchTasks]);
 
-            try {
-                const data = await getTaskById(id);
-
-                if (!isCancelled) {
-                    setTask(normalizeTask(data));
-                }
-            } catch (err) {
-                if (!isCancelled) {
-                    setTask(null);
-                    setError(err.message);
-                }
-            } finally {
-                if (!isCancelled) {
-                    setIsLoading(false);
-                }
-            }
-        };
-
-        loadTask();
-
-        return () => {
-            isCancelled = true;
-        };
-    }, [id]);
+    const notFound = !isLoading && !card && tasks.length > 0;
 
     return (
         <PopBrowse
-            card={task}
+            card={card}
             cardId={id}
             isLoading={isLoading}
-            error={error}
+            error={error || (notFound ? "Задача не найдена" : "")}
         />
     );
 };
