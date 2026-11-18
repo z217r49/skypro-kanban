@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Calendar from "../../calendar/Calendar";
 import Message from "../../ui/Message";
-import { createTask } from "../../../services/tasks";
+import { useTasks } from "../../../context/TaskContext";
 import {
     SPopNewCard,
     SPopNewCardContainer,
@@ -31,6 +31,7 @@ const TOPICS = [
 
 const PopNewCard = () => {
     const navigate = useNavigate();
+    const { addTask } = useTasks();
 
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
@@ -50,7 +51,7 @@ const PopNewCard = () => {
         setError("");
 
         try {
-            await createTask({
+            await addTask({
                 title: title.trim(),
                 description: description.trim(),
                 topic,

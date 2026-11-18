@@ -1,8 +1,7 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import Column from "../column/Column";
-import { getTasks } from "../../services/tasks";
-import { normalizeTask } from "../../utils/task";
+import { useTasks } from "../../context/TaskContext";
 import {
     SMain,
     SMainBlock,
@@ -22,33 +21,19 @@ const COLUMNS = [
 
 const Main = () => {
     const location = useLocation();
-
-    const [tasks, setTasks] = useState([]);
-    const [isLoading, setIsLoading] = useState(true);
-    const [error, setError] = useState("");
-
-    const loadTasks = useCallback(async () => {
-        setIsLoading(true);
-        setError("");
-
-        try {
-            const data = await getTasks();
-            setTasks(data.map(normalizeTask));
-        } catch (err) {
-            setTasks([]);
-            setError(err.message);
-        } finally {
-            setIsLoading(false);
-        }
-    }, []);
+    const { tasks, isLoading, error, fetchTasks } = useTasks();
 
     useEffect(() => {
         if (location.pathname !== "/") {
             return;
         }
 
-        loadTasks();
-    }, [location.pathname, loadTasks]);
+        if (tasks.length > 0) {
+            return;
+        }
+
+        fetchTasks();
+    }, [location.pathname, tasks.length, fetchTasks]);
 
     return (
         <SMain>
@@ -59,7 +44,7 @@ const Main = () => {
                     ) : error ? (
                         <SError>
                             <span>{error}</span>
-                            <SRetry type="button" onClick={loadTasks}>
+                            <SRetry type="button" onClick={fetchTasks}>
                                 Повторить
                             </SRetry>
                         </SError>
