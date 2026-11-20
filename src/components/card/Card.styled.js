@@ -23,6 +23,10 @@ export const SCardItem = styled.div`
     animation-duration: 500ms;
     animation-timing-function: linear;
     margin-bottom: 10px;
+
+        @media screen and (max-width: 485px) {
+        margin-bottom: 12px;
+    }
 `;
 
 export const SCardsCard = styled.div`
@@ -58,7 +62,7 @@ export const SCardTheme = styled.div`
 export const SCardThemeText = styled.p`
     font-size: 10px;
     font-weight: 600;
-    line-height: 10px;
+    line-height: 11px;
     color: inherit;
 `;
 
@@ -92,6 +96,7 @@ export const SCardTitle = styled.h3`
     line-height: 18px;
     color: #000000;
     margin-bottom: 10px;
+    ${({ $done }) => $done && "text-decoration: line-through;"}
 `;
 
 export const SCardDate = styled.div`

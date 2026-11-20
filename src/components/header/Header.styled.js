@@ -20,6 +20,11 @@ export const SHeaderBlock = styled.div`
 export const SHeaderLogoImg = styled.img`
     width: 85px;
     padding-top: 6px;
+
+    @media screen and (max-width: 485px) {
+        padding-top: 3px;
+        padding-left: 4px;
+    }
 `;
 
 export const SHeaderNav = styled.nav`
@@ -28,6 +33,12 @@ export const SHeaderNav = styled.nav`
     display: flex;
     align-items: center;
     justify-content: center;
+    gap: 19px;
+    
+    @media screen and (max-width: 485px) {
+    padding-top: 3px;
+    padding-right: 4px;
+    }
 `;
 
 export const SHeaderBtnMainNew = styled.button`

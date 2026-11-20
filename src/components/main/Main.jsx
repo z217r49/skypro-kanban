@@ -6,7 +6,7 @@ import {
     SMain,
     SMainBlock,
     SMainContent,
-    SLoading,
+    SLoader,
     SError,
     SRetry,
 } from "./Main.styled";
@@ -36,11 +36,11 @@ const Main = () => {
     }, [location.pathname, tasks.length, fetchTasks]);
 
     return (
-        <SMain>
+        <SMain className="kanban-main">
             <div className="container">
                 <SMainBlock>
                     {isLoading ? (
-                        <SLoading>Данные загружаются</SLoading>
+                        <SLoader />
                     ) : error ? (
                         <SError>
                             <span>{error}</span>
@@ -54,6 +54,7 @@ const Main = () => {
                                 <Column
                                     key={status}
                                     columnStatus={title}
+                                    status={status}
                                     cards={tasks.filter((task) => task.status === status)}
                                 />
                             ))}

@@ -1,8 +1,7 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { AuthContext } from "./AuthContext";
 import { login as loginRequest, register as registerRequest } from "../services/auth";
 import { clearAuth, loadAuth, saveAuth } from "../services/storage";
-
-const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
     const [user, setUser] = useState(() => loadAuth()?.user ?? null);
@@ -25,20 +24,18 @@ export function AuthProvider({ children }) {
     );
 
     // Функция регистрации
-    const register = useCallback(
-        async ({ login, name, password }) => {
-            const nextUser = await registerRequest({ login, name, password });
-            applyAuth(nextUser);
-            return nextUser;
-        },
-        [applyAuth]
-    );
+    const register = useCallback(async ({ login, name, password }) => {
+        const nextUser = await registerRequest({ login, name, password });
+        return nextUser;
+    }, []);
 
     // Функция выхода
     const logout = useCallback(() => {
         setUser(null);
         setToken(null);
         clearAuth();
+
+        window.dispatchEvent(new Event("kanban:logout"));
     }, []);
 
     useEffect(() => {
@@ -66,15 +63,4 @@ export function AuthProvider({ children }) {
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
-// Кастомный хук
-export function useAuth() {
-    const context = useContext(AuthContext);
-
-    if (!context) {
-        throw new Error("useAuth должен использоваться внутри AuthProvider");
-    }
-
-    return context;
-}
-
-export default AuthContext;
+export default AuthProvider;

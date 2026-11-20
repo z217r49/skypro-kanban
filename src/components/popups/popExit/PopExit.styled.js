@@ -30,7 +30,9 @@ export const SPopExitBlock = styled.div`
     background-color: #ffffff;
     max-width: 370px;
     width: 100%;
-    padding: 50px 60px;
+    /* padding: 50px 60px; */
+    padding-top: 50px;
+    padding-bottom: 50px;
     border-radius: 10px;
     border: 0.7px solid #d4dbe5;
     box-shadow: 0px 4px 67px -12px rgba(0, 0, 0, 0.13);
@@ -55,7 +57,7 @@ export const SPopExitFormGroup = styled.div`
     width: 100%;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
 
     @media only screen and (max-width: 375px) {
     display: block;

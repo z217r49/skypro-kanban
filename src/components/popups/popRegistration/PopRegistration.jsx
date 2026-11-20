@@ -1,9 +1,17 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../../context/AuthContext";
+import { useTheme } from "../../../context/ThemeContext";
+import { getErrorMessage } from "../../../services/api";
+import {
+    LIMITS,
+    isBlank,
+    validateName,
+    validateLogin,
+    validatePassword,
+} from "../../../utils/validation";
 import Message from "../../ui/Message";
 import {
-    SWrapper,
     SContainerSignup,
     SModal,
     SModalBlock,
@@ -14,155 +22,172 @@ import {
     SModalFormGroup,
 } from "./PopRegistration.styled";
 
-const PopRegistration = ({ dark = false }) => {
+const EMPTY_ERROR =
+    "Введенные вами данные не корректны. Чтобы завершить регистрацию, заполните все поля в форме.";
+const INVALID_ERROR =
+    "Введенные вами данные не корректны. Чтобы завершить регистрацию, введите данные корректно и повторите попытку.";
+
+const getInvalidFieldsByMessage = (message) => {
+    const text = String(message ?? "").toLowerCase();
+
+    if (text.includes("email") || text.includes("почт") || text.includes("логин")) {
+        return { login: true };
+    }
+
+    if (text.includes("пароль")) {
+        return { password: true };
+    }
+
+    if (text.includes("имя") || text.includes("имени") || text.includes("name")) {
+        return { name: true };
+    }
+
+    return { name: true, login: true, password: true };
+};
+
+export default function PopRegistration() {
     const { register } = useAuth();
+    const { isDark } = useTheme();
     const navigate = useNavigate();
 
-    const [form, setForm] = useState({ name: "", login: "", password: "" });
-    const [fieldErrors, setFieldErrors] = useState({});
-    const [apiError, setApiError] = useState("");
+    const [values, setValues] = useState({ name: "", login: "", password: "" });
+    const [invalidFields, setInvalidFields] = useState({});
+    const [errorText, setErrorText] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const hasError = Boolean(apiError) || Object.keys(fieldErrors).length > 0;
+    const hasError = Boolean(errorText);
     const isDisabled = isSubmitting || hasError;
 
     const handleChange = (event) => {
         const { name, value } = event.target;
-
-        setForm((prev) => ({ ...prev, [name]: value }));
-
-        setFieldErrors((prev) => {
-            if (!prev[name]) {
-                return prev;
-            }
-
-            const next = { ...prev };
-            delete next[name];
-            return next;
-        });
-
-        setApiError("");
-    };
-
-    const validate = () => {
-        const nextErrors = {};
-
-        if (!form.name.trim()) {
-            nextErrors.name = "Введите имя";
-        }
-
-        if (!form.login.trim()) {
-            nextErrors.login = "Введите логин";
-        }
-
-        if (!form.password.trim()) {
-            nextErrors.password = "Введите пароль";
-        }
-
-        return nextErrors;
+        setValues((prev) => ({ ...prev, [name]: value }));
+        setErrorText("");
+        setInvalidFields({});
     };
 
     const handleSubmit = async (event) => {
         event.preventDefault();
 
-        const nextErrors = validate();
-        setFieldErrors(nextErrors);
-
-        if (Object.keys(nextErrors).length > 0) {
-            setApiError("");
+        if (isSubmitting) {
             return;
         }
 
+        const emptyFields = {};
+        if (isBlank(values.name)) emptyFields.name = true;
+        if (isBlank(values.login)) emptyFields.login = true;
+        if (isBlank(values.password)) emptyFields.password = true;
+
+        if (Object.keys(emptyFields).length > 0) {
+            setInvalidFields(emptyFields);
+            setErrorText(EMPTY_ERROR);
+            return;
+        }
+
+        const formatErrors = {};
+        if (validateName(values.name)) formatErrors.name = true;
+        if (validateLogin(values.login)) formatErrors.login = true;
+        if (validatePassword(values.password)) formatErrors.password = true;
+
+        if (Object.keys(formatErrors).length > 0) {
+            setInvalidFields(formatErrors);
+            setErrorText(INVALID_ERROR);
+            return;
+        }
+
+        setInvalidFields({});
+        setErrorText("");
         setIsSubmitting(true);
-        setApiError("");
 
         try {
             await register({
-                name: form.name.trim(),
-                login: form.login.trim(),
-                password: form.password,
+                name: values.name.trim(),
+                login: values.login.trim(),
+                password: values.password,
             });
 
-            navigate("/", { replace: true });
+            navigate("/login", {
+                replace: true,
+                state: { registered: true, login: values.login.trim() },
+            });
         } catch (error) {
-            setApiError(error.message);
+            setInvalidFields(getInvalidFieldsByMessage(getErrorMessage(error)));
+            setErrorText(INVALID_ERROR);
         } finally {
             setIsSubmitting(false);
         }
     };
 
     return (
-        <SWrapper $dark={dark}>
-            <SContainerSignup>
-                <SModal>
-                    <SModalBlock $dark={dark}>
-                        <SModalTtl>
-                            <h2>Регистрация</h2>
-                        </SModalTtl>
-                        <SModalFormLogin id="formLogUp" onSubmit={handleSubmit} noValidate>
-                            <SModalInput
-                                $dark={dark}
-                                className="first-name"
-                                type="text"
-                                name="name"
-                                id="first-name"
-                                placeholder="Имя"
-                                autoComplete="name"
-                                aria-invalid={Boolean(fieldErrors.name) || Boolean(apiError)}
-                                value={form.name}
-                                onChange={handleChange}
-                            />
-                            <Message>{fieldErrors.name}</Message>
+        <SContainerSignup>
+            <SModal $dark={isDark}>
+                <SModalBlock $dark={isDark}>
+                    <SModalTtl>
+                        <h2>Регистрация</h2>
+                    </SModalTtl>
 
-                            <SModalInput
-                                $dark={dark}
-                                className="login"
-                                type="text"
-                                name="login"
-                                id="loginReg"
-                                placeholder="Логин"
-                                autoComplete="username"
-                                aria-invalid={Boolean(fieldErrors.login) || Boolean(apiError)}
-                                value={form.login}
-                                onChange={handleChange}
-                            />
-                            <Message>{fieldErrors.login}</Message>
+                    <SModalFormLogin
+                        id="formSignUp"
+                        action="#"
+                        onSubmit={handleSubmit}
+                        noValidate
+                    >
+                        <SModalInput
+                            $dark={isDark}
+                            type="text"
+                            name="name"
+                            id="formName"
+                            placeholder="Имя"
+                            value={values.name}
+                            onChange={handleChange}
+                            aria-invalid={Boolean(invalidFields.name)}
+                            maxLength={LIMITS.name}
+                            autoComplete="name"
+                        />
 
-                            <SModalInput
-                                $dark={dark}
-                                className="password-first"
-                                type="password"
-                                name="password"
-                                id="passwordFirst"
-                                placeholder="Пароль"
-                                autoComplete="new-password"
-                                aria-invalid={Boolean(fieldErrors.password) || Boolean(apiError)}
-                                value={form.password}
-                                onChange={handleChange}
-                            />
-                            <Message>{fieldErrors.password}</Message>
+                        <SModalInput
+                            $dark={isDark}
+                            type="text"
+                            name="login"
+                            id="formLogin"
+                            placeholder="Эл. почта"
+                            value={values.login}
+                            onChange={handleChange}
+                            aria-invalid={Boolean(invalidFields.login)}
+                            maxLength={LIMITS.login}
+                            autoComplete="username"
+                        />
 
-                            <Message>{apiError}</Message>
+                        <SModalInput
+                            $dark={isDark}
+                            type="password"
+                            name="password"
+                            id="formPassword"
+                            placeholder="Пароль"
+                            value={values.password}
+                            onChange={handleChange}
+                            aria-invalid={Boolean(invalidFields.password)}
+                            maxLength={LIMITS.password}
+                            autoComplete="new-password"
+                        />
 
-                            <SModalBtnSignupEnt
-                                type="submit"
-                                id="SignUpEnter"
-                                disabled={isDisabled}
-                            >
-                                {isSubmitting ? "Регистрация..." : "Зарегистрироваться"}
-                            </SModalBtnSignupEnt>
+                        <Message type="error">{errorText}</Message>
 
-                            <SModalFormGroup>
-                                <p>
-                                    Уже есть аккаунт? <Link to="/login">Войдите здесь</Link>
-                                </p>
-                            </SModalFormGroup>
-                        </SModalFormLogin>
-                    </SModalBlock>
-                </SModal>
-            </SContainerSignup>
-        </SWrapper>
+                        <SModalBtnSignupEnt
+                            id="btnSignUp"
+                            type="submit"
+                            disabled={isDisabled}
+                        >
+                            {isSubmitting ? "Регистрация..." : "Зарегистрироваться"}
+                        </SModalBtnSignupEnt>
+                    </SModalFormLogin>
+
+                    <SModalFormGroup>
+                        <p>Уже есть аккаунт?&nbsp;
+                            <Link to="/login">Войдите здесь</Link>
+                        </p>
+                    </SModalFormGroup>
+                </SModalBlock>
+            </SModal>
+        </SContainerSignup>
     );
-};
-
-export default PopRegistration;
+}

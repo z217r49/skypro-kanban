@@ -1,43 +1,51 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
 export const SColumn = styled.div`
-    width: 20%;
-    margin: 0 auto;
+    flex: 1 1 0;
     display: block;
+    border-radius: 10px;
 
-    @media screen and (max-width: 1200px) {
+    @media screen and (max-width: 1201px) {
         width: 100%;
+        flex: 0 0 auto;
         margin: 0 auto;
         display: block;
     }
 `;
 
 export const SColumnTitles = styled.div`
-    margin-top: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     margin-bottom: 20px;
-    color: #94A6BE;
-    font-size: 14px;
-    font-weight: 600;
-    line-height: 1;
-    text-transform: uppercase;
 `;
 
 export const SColumnP = styled.p`
-    color: #94A6BE;
+    color: #94a6be;
     font-size: 14px;
     font-weight: 600;
     line-height: 1;
     text-transform: uppercase;
+    letter-spacing: 0.14px;
 `;
 
 export const SCards = styled.div`
-    width: 100%;
-    display: block;
-    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: 40px;
 
-    @media screen and (max-width: 1200px) {
-        width: 100%;
-        display: flex;
-        overflow-y: auto;
-    }
+    @media screen and (max-width: 485px) {
+        flex-direction: row;
+        gap: 10px;
+    }    
+`;
+
+export const SCardPlaceholder = styled.div`
+    width: 220px;
+    height: 130px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    border: 1px dashed #94a6be;
+    background-color: transparent;
+    pointer-events: none;
 `;

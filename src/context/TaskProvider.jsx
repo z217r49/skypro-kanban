@@ -1,4 +1,5 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { TaskContext } from "./TaskContext";
 import {
     createTask as createTaskRequest,
     deleteTask as deleteTaskRequest,
@@ -6,16 +7,10 @@ import {
     updateTask as updateTaskRequest,
 } from "../services/tasks";
 import { normalizeTask } from "../utils/task";
-import { useAuth } from "./AuthContext";
-
-const TaskContext = createContext();
 
 export function TaskProvider({ children }) {
-    // Данные авторизации
-    const { isAuth } = useAuth();
-
     const [tasks, setTasks] = useState([]);
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState("");
 
     // Загрузка списка задач с сервера
@@ -55,15 +50,20 @@ export function TaskProvider({ children }) {
         return data;
     }, []);
 
+    // Очистка списка при выходе из аккаунта.
     useEffect(() => {
-        if (isAuth) {
-            return;
-        }
+        const handleLogout = () => {
+            setTasks([]);
+            setError("");
+            setIsLoading(false);
+        };
 
-        setTasks([]);
-        setError("");
-        setIsLoading(false);
-    }, [isAuth]);
+        window.addEventListener("kanban:logout", handleLogout);
+
+        return () => {
+            window.removeEventListener("kanban:logout", handleLogout);
+        };
+    }, []);
 
     const value = useMemo(
         () => ({
@@ -81,15 +81,4 @@ export function TaskProvider({ children }) {
     return <TaskContext.Provider value={value}>{children}</TaskContext.Provider>;
 }
 
-// Кастомный хук
-export function useTasks() {
-    const context = useContext(TaskContext);
-
-    if (!context) {
-        throw new Error("useTasks должен использоваться внутри TaskProvider");
-    }
-
-    return context;
-}
-
-export default TaskContext;
+export default TaskProvider;
