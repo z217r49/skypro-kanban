@@ -5,8 +5,7 @@ export const SCalendar = styled.div`
     margin-bottom: 20px;
 
     @media screen and (max-width: 660px) {
-        max-width: 340px;
-        width: 100%;
+        width: 344px;
     }
 
     @media screen and (max-width: 495px) {
@@ -16,15 +15,10 @@ export const SCalendar = styled.div`
 
 export const SCalendarTtl = styled.p`
     margin-bottom: 14px;
-    padding: 0 7px;
     color: #000000;
     font-size: 14px;
     font-weight: 600;
     line-height: 1;
-
-    @media screen and (max-width: 660px) {
-        padding: 0;
-    }
 `;
 
 export const SCalendarBlock = styled.div`
@@ -33,15 +27,11 @@ export const SCalendarBlock = styled.div`
 
 export const SCalendarNav = styled.div`
     width: 100%;
+    height: 25px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-top: 14px;
-    padding: 0 7px;
-
-    @media screen and (max-width: 660px) {
-        padding: 0;
-    }
+    margin-bottom: 14px;
 `;
 
 export const SCalendarMonth = styled.div`
@@ -59,14 +49,19 @@ export const SNavActions = styled.div`
 
 export const SNavAction = styled.div`
     width: 18px;
-    height: 25px;
-    cursor: pointer;
+    height: 18px;
     display: flex;
     align-items: center;
     justify-content: center;
+    cursor: pointer;
 
     svg {
         fill: #94a6be;
+        transition: fill 0.15s ease;
+    }
+
+    &:hover svg {
+        fill: #565eef;
     }
 `;
 
@@ -89,15 +84,11 @@ export const SCalendarDayName = styled.div`
     font-weight: 500;
     line-height: normal;
     letter-spacing: -0.2px;
-
-    @media screen and (max-width: 660px) {
-        font-size: 14px;
-    }
 `;
 
 export const SCalendarCells = styled.div`
     width: 182px;
-    height: 126px;
+    min-height: 126px;
     display: flex;
     flex-wrap: wrap;
 
@@ -105,6 +96,10 @@ export const SCalendarCells = styled.div`
         width: 344px;
         height: auto;
         justify-content: space-around;
+    }
+
+    @media screen and (max-width: 495px) {
+        width: 100%;
     }
 `;
 
@@ -123,16 +118,26 @@ export const SCalendarCell = styled.div`
     letter-spacing: -0.2px;
     cursor: pointer;
 
-    ${({ $otherMonth }) =>
+    ${({ $otherMonth, $disabled }) =>
         !$otherMonth &&
+        !$disabled &&
         `&:hover {
             color: #94a6be;
-            background-color: #eaeef6;
+            background-color: rgba(234, 238, 246, 1);
         }`}
 
-    ${({ $otherMonth }) => $otherMonth && "opacity: 0;"}
-    ${({ $current }) => $current && "font-weight: 700;"}
-    ${({ $active }) => $active && "background-color: #94a6be; color: #ffffff;"}
+    ${({ $otherMonth }) => $otherMonth && "opacity: 0; pointer-events: none;"}
+    ${({ $current }) => $current && 
+        `
+        font-weight: 700;
+        color: #000000;
+
+        body[data-theme="dark"] & {
+            color: #ffffff;
+        }
+    `}
+    ${({ $active }) => $active && "background-color: rgba(148, 166, 190, 1); color: #ffffff; font-weight: 700;"}
+    ${({ $disabled }) => $disabled && "cursor: default;"}
 
     @media screen and (max-width: 660px) {
         width: 42px;
@@ -143,22 +148,19 @@ export const SCalendarCell = styled.div`
 
 export const SCalendarPeriod = styled.div`
     padding: 0 7px;
-
-    @media screen and (max-width: 660px) {
-        padding: 0;
-    }
 `;
 
 export const SCalendarP = styled.p`
     color: #94a6be;
     font-size: 10px;
-    line-height: 1;
+    line-height: 1.4;
 
     span {
         color: #000000;
+        font-weight: 500;
     }
 
-    @media screen and (max-width: 660px) {
-        font-size: 14px;
+    body[data-theme="dark"] & span {
+        color: #ffffff;
     }
 `;

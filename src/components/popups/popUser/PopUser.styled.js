@@ -14,6 +14,10 @@ export const SHeaderPopUserSet = styled.div`
   padding: 33px;
   text-align: center;
   z-index: 2;
+
+  @media screen and (max-width: 375px) {
+    top: 58px;
+  }
 `;
 
 export const SPopUserSetName = styled.p`
@@ -83,16 +87,23 @@ export const SPopUserSetButton = styled.button`
   border-radius: 4px;
   border: 1px solid #565eef;
 
+  @media screen and (max-width: 375px) {
+    width: 142px;
+    height: 40px;
+  }
+
   a {
     color: #565eef;
   }
 
-  &:hover {
-    background-color: #33399b;
+  &:hover,
+  &:active {
+    background-color: rgba(86, 94, 239, 1);
     color: #ffffff;
   }
 
-  &:hover a {
+  &:hover a,
+  &:active a {
     color: #ffffff;
   }
 `;

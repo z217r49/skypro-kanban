@@ -20,18 +20,23 @@ const TOPIC_COLOR = {
 };
 
 const Card = ({ card }) => {
-    const { id, topic, title, date } = card;
+    const { id, topic, title, date, status } = card;
     const topicColor = TOPIC_COLOR[topic] ?? "_gray";
     const cardUrl = `/card/${id}`;
 
+    const handleDragStart = (event) => {
+        event.dataTransfer.setData("text/plain", String(id));
+        event.dataTransfer.effectAllowed = "move";
+    };
+
     return (
-        <SCardItem>
-            <SCardsCard>
+        <SCardItem draggable onDragStart={handleDragStart}>
+            <SCardsCard className="kanban-card">
                 <SCardGroup>
                     <SCardTheme $color={topicColor}>
                         <SCardThemeText>{topic}</SCardThemeText>
                     </SCardTheme>
-                    <Link to={cardUrl}>
+                    <Link to={cardUrl} draggable={false}>
                         <SCardBtn>
                             <SCardBtnDot />
                             <SCardBtnDot />
@@ -40,8 +45,10 @@ const Card = ({ card }) => {
                     </Link>
                 </SCardGroup>
                 <SCardContent>
-                    <Link to={cardUrl}>
-                        <SCardTitle>{title}</SCardTitle>
+                    <Link to={cardUrl} draggable={false}>
+                        <SCardTitle className="kanban-card__title" $done={status === "Готово"}>
+                            {title}
+                        </SCardTitle>
                     </Link>
                     <SCardDate>
                         <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 13 13" fill="none">

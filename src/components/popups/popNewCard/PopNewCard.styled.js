@@ -18,7 +18,7 @@ const colorStyles = ({ $color }) => {
 export const SPopNewCard = styled.div`
   display: block;
   width: 100%;
-  min-width: 375px;
+  min-width: 320px;
   height: 100%;
   min-height: 100vh;
   position: absolute;
@@ -210,9 +210,15 @@ export const SFormNewCreate = styled.button`
   line-height: 1;
   color: #ffffff;
   float: right;
+  cursor: pointer;
 
   &:hover {
     background-color: #33399b;
+  }
+
+  &:disabled {
+    background-color: #94a6be;
+    cursor: not-allowed;
   }
 
   @media screen and (max-width: 495px) {
@@ -247,15 +253,28 @@ export const SCategoriesTheme = styled.div`
   padding: 8px 20px;
   border-radius: 24px;
   margin-right: 7px;
+  cursor: pointer;
+  user-select: none;
   opacity: 0.4;
+  transition: opacity 0.15s ease;
 
   p {
     font-size: 14px;
     font-weight: 600;
     line-height: 14px;
     white-space: nowrap;
+    cursor: pointer;
   }
 
   ${colorStyles}
   ${({ $active }) => $active && "opacity: 1 !important;"}
+
+  &:hover {
+    opacity: 0.8;
+  }
+
+  &:focus-visible {
+    outline: 2px solid #565eef;
+    outline-offset: 2px;
+  }
 `;

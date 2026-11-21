@@ -5,7 +5,9 @@ const Message = ({ type = "error", children }) => {
         return null;
     }
 
-    return <SMessage $type={type}>{children}</SMessage>;
+    return <SMessage className="kanban-message" $type={type}>
+                {children}
+            </SMessage>
 };
 
 export default Message;

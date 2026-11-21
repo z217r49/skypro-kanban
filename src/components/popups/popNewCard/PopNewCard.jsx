@@ -4,6 +4,11 @@ import Calendar from "../../calendar/Calendar";
 import Message from "../../ui/Message";
 import { useTasks } from "../../../context/TaskContext";
 import {
+    LIMITS,
+    validateDescription,
+    validateTitle,
+} from "../../../utils/validation";
+import {
     SPopNewCard,
     SPopNewCardContainer,
     SPopNewCardBlock,
@@ -35,15 +40,25 @@ const PopNewCard = () => {
 
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
-    const [topic, setTopic] = useState("Web Design");
+    const [topic, setTopic] = useState(TOPICS[0].value);
+    const [date, setDate] = useState(() => new Date());
     const [error, setError] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
+
+    const handleTopicKeyDown = (event, value) => {
+        if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            setTopic(value);
+        }
+    };
 
     const handleSubmit = async (event) => {
         event.preventDefault();
 
-        if (!title.trim()) {
-            setError("Введите название задачи");
+        const validationError = validateTitle(title) || validateDescription(description);
+
+        if (validationError) {
+            setError(validationError);
             return;
         }
 
@@ -56,7 +71,7 @@ const PopNewCard = () => {
                 description: description.trim(),
                 topic,
                 status: "Без статуса",
-                date: new Date().toISOString(),
+                date: date.toISOString(),
             });
 
             navigate("/", { replace: true });
@@ -70,12 +85,12 @@ const PopNewCard = () => {
     return (
         <SPopNewCard id="popNewCard">
             <SPopNewCardContainer>
-                <SPopNewCardBlock>
+                <SPopNewCardBlock className="kanban-modal">
                     <SPopNewCardContent>
                         <SPopNewCardTtl>Создание задачи</SPopNewCardTtl>
                         <SPopNewCardClose as={Link} to="/">&#10006;</SPopNewCardClose>
                         <SPopNewCardWrap>
-                            <SPopNewCardForm id="formNewCard" onSubmit={handleSubmit}>
+                            <SPopNewCardForm id="formNewCard" onSubmit={handleSubmit} noValidate>
                                 <SFormNewBlock>
                                     <SSubttl htmlFor="formTitle">Название задачи</SSubttl>
                                     <SFormNewInput
@@ -84,6 +99,8 @@ const PopNewCard = () => {
                                         id="formTitle"
                                         placeholder="Введите название задачи..."
                                         autoFocus
+                                        maxLength={LIMITS.title}
+                                        aria-invalid={Boolean(error)}
                                         value={title}
                                         onChange={(event) => {
                                             setTitle(event.target.value);
@@ -97,24 +114,37 @@ const PopNewCard = () => {
                                         name="text"
                                         id="textArea"
                                         placeholder="Введите описание задачи..."
+                                        maxLength={LIMITS.description}
+                                        aria-invalid={Boolean(error)}
                                         value={description}
-                                        onChange={(event) => setDescription(event.target.value)}
+                                        onChange={(event) => {
+                                            setDescription(event.target.value);
+                                            setError("");
+                                        }}
                                     />
                                 </SFormNewBlock>
                             </SPopNewCardForm>
 
-                            <Calendar />
+                            <Calendar value={date} onChange={setDate} />
                         </SPopNewCardWrap>
 
                         <SCategories>
-                            <SCategoriesP>Категория</SCategoriesP>
-                            <SCategoriesThemes>
+                            <SCategoriesP id="categoriesLabel">Категория</SCategoriesP>
+                            <SCategoriesThemes
+                                role="radiogroup"
+                                aria-labelledby="categoriesLabel"
+                            >
                                 {TOPICS.map(({ value, color }) => (
                                     <SCategoriesTheme
                                         key={value}
+                                        className="kanban-chip"
+                                        role="radio"
+                                        tabIndex={0}
+                                        aria-checked={topic === value}
                                         $color={color}
                                         $active={topic === value}
                                         onClick={() => setTopic(value)}
+                                        onKeyDown={(event) => handleTopicKeyDown(event, value)}
                                     >
                                         <p>{value}</p>
                                     </SCategoriesTheme>

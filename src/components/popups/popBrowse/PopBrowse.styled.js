@@ -1,18 +1,18 @@
 import styled from "styled-components";
 
 const colorStyles = ({ $color }) => {
-    switch ($color) {
-        case "orange":
-            return "background-color: #ffe4c2; color: #ff6d00;";
-        case "green":
-            return "background-color: #b4fdd1; color: #06b16e;";
-        case "purple":
-            return "background-color: #e9d4ff; color: #9a48f1;";
-        case "gray":
-            return "background: #94a6be; color: #ffffff;";
-        default:
-            return "";
-    }
+  switch ($color) {
+    case "orange":
+      return "background-color: #ffe4c2; color: #ff6d00;";
+    case "green":
+      return "background-color: #b4fdd1; color: #06b16e;";
+    case "purple":
+      return "background-color: #e9d4ff; color: #9a48f1;";
+    case "gray":
+      return "background: #94a6be; color: #ffffff;";
+    default:
+      return "";
+  }
 };
 
 export const SPopBrowse = styled.div`
@@ -209,6 +209,32 @@ export const SSubttl = styled.label`
   line-height: 1;
 `;
 
+export const SFormBrowseInput = styled.input`
+  max-width: 370px;
+  width: 100%;
+  outline: none;
+  padding: 10px 14px;
+  background: transparent;
+  border: 0.7px solid rgba(148, 166, 190, 0.4);
+  border-radius: 8px;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 24px;
+  letter-spacing: -0.14px;
+  margin-right: 12px;
+
+  &::placeholder {
+    font-weight: 400;
+    font-size: 14px;
+    color: #94a6be;
+  }
+
+  @media screen and (max-width: 495px) {
+    max-width: 100%;
+    font-size: 16px;
+  }
+`;
+
 export const SFormBrowseArea = styled.textarea`
   max-width: 370px;
   width: 100%;
@@ -301,27 +327,6 @@ export const SBtnGroup = styled.div`
   }
 `;
 
-export const SBtnBor = styled.button`
-  border-radius: 4px;
-  border: 0.7px solid var(--palette-navy-60, #565eef);
-  outline: none;
-  background: transparent;
-  color: #565eef;
-
-  a {
-    color: #565eef;
-  }
-
-  &:hover {
-    background-color: #33399b;
-    color: #ffffff;
-  }
-
-  &:hover a {
-    color: #ffffff;
-  }
-`;
-
 export const SBtnBg = styled.button`
   border-radius: 4px;
   background: #565eef;
@@ -335,5 +340,33 @@ export const SBtnBg = styled.button`
 
   &:hover {
     background-color: #33399b;
+  }
+`;
+
+export const SBtnBor = styled.button`
+  border-radius: 4px;
+  border: 0.7px solid var(--palette-navy-60, #565eef);
+  outline: none;
+  background: transparent;
+  color: #565eef;
+
+  a {
+    color: #565eef;
+  }
+
+  &:hover,
+  &:active {
+    background-color: rgba(86, 94, 239, 1);
+    color: #ffffff;
+  }
+
+  &:hover a,
+  &:active a {
+    color: #ffffff;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
   }
 `;

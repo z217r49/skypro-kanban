@@ -22,7 +22,7 @@ const PopExit = () => {
     return (
         <SPopExit id="popExit">
             <SPopExitContainer>
-                <SPopExitBlock>
+                <SPopExitBlock className="kanban-modal">
                     <SPopExitTtl>
                         <h2>Выйти из аккаунта?</h2>
                     </SPopExitTtl>

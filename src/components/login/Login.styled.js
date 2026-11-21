@@ -8,8 +8,8 @@ export const SWrapper = styled.div`
     background-color: #eaeef6;
 
     ${({ $dark }) =>
-    $dark &&
-    `
+        $dark &&
+        `
         background-color: #151419;
     `}
 `;
@@ -32,7 +32,7 @@ export const SModal = styled.div`
     justify-content: center;
 
     @media screen and (max-width: 375px) {
-        background-color: #ffffff;
+    background-color: ${({ $dark }) => ($dark ? "#151419" : "#ffffff")};
     }
 `;
 
@@ -57,7 +57,7 @@ export const SModalBlock = styled.div`
     @media screen and (max-width: 375px) {
         max-width: 368px;
         width: 100%;
-        padding: 0 16px;
+        padding: 0 14px;
         border-radius: none;
         border: none;
         box-shadow: none;
@@ -89,11 +89,11 @@ export const SModalFormLogin = styled.form`
 
 export const SModalInput = styled.input`
     width: 100%;
-    min-width: 100%;
     border-radius: 8px;
     border: 0.7px solid rgba(148, 166, 190, 0.4);
     outline: none;
-    padding: 10px 8px;
+    height: 30px;
+    padding-left: 8px;
 
     &::placeholder {
         font-family: "Roboto", sans-serif;
@@ -122,6 +122,10 @@ export const SModalInput = styled.input`
         `
             background-color: transparent;
         `}
+
+    @media screen and (max-width: 375px) {
+        height: 40px;
+    }
 `;
 
 export const SModalBtnEnter = styled.button`

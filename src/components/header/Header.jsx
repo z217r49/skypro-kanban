@@ -47,7 +47,7 @@ const Header = () => {
     }, [isUserMenuOpen]);
 
     return (
-        <SHeader>
+        <SHeader  className="kanban-header">
             <div className="container">
                 <SHeaderBlock>
                     <div className="header__logo _show _light">
